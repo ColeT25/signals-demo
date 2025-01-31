@@ -23,6 +23,8 @@ export class AppComponent {
 	// update this to not just have a few buttons but a dropdown with some valid selections and more cool stuff
 	// in component store starship in a signal and show how editing it works with update, demo set some more.
 	// Also need to show off effects
+	// Also add in some event handlers like mouse move and stuff that only go off at certain times to show how change detection is better
+	// add comments throughout where I want to talk about stuff
 	readonly starship = computed<StarShip>(() => {
 		if (this.starshipSelected()) {
 			return this.starWarsService.currentStarShip()!;
