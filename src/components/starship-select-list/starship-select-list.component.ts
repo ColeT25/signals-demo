@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, linkedSignal, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, linkedSignal, output, signal, viewChildren } from '@angular/core';
 import { StarShip } from '../../services/star-wars.service';
 
 
@@ -44,6 +44,8 @@ export class StarshipSelectListComponent {
 		}
 	});
 
+	readonly selectShip = output<string>(); // outputs the ID of the most recent ship selected
+
 	readonly shipDivs = viewChildren<ElementRef<HTMLElement>>('ship');
 
 	addShipToList(newShip: StarShip): void {
@@ -77,6 +79,7 @@ export class StarshipSelectListComponent {
 				prev.delete(ship);
 			} else {
 				prev.add(ship);
+				this.selectShip.emit(ship.id);
 			}
 
 			return new Set(prev);
