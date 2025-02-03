@@ -10,12 +10,13 @@ div.container {
 	div.display-container {
 		display: flex;
 		flex-direction: column;
-		width: 30%;
+		width: 50%;
 		align-content: center;
 		justify-content: center;
 
 		div.buttons {
 			display: flex;
+			width: 60%;
 			margin-bottom: 10px;
 			button {
 				margin-right: 5px;
@@ -23,6 +24,7 @@ div.container {
 		}
 
 		div.loading {
+			width: 60%;
 			color: darkblue;
 			font-size: 30px;
 			font-style: italic;
@@ -30,6 +32,7 @@ div.container {
 		}
 
 		div.no-select {
+			width: 60%;
 			color:darkred;
 			font-size: 30px;
 			font-weight: bold;

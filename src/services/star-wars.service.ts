@@ -11,7 +11,6 @@ export interface StarShip {
 	manufacturer: string;
 	model: string;
 	name: string;
-	films: SwapiUrl[]
 }
 
 export const DEMO_STARSHIP: StarShip = {
@@ -22,13 +21,11 @@ export const DEMO_STARSHIP: StarShip = {
 	manufacturer: 'Angular',
 	model: 'Angular signals',
 	name: 'demo',
-	films: []
 }
 
 type StarShipRequest = {
 	id: string;
 }
-type SwapiUrl = Flavor<string, 'SwapiUrl'>;
 
 const INVALID_ID: string = '-1';
 const baseRequestUrl = 'http://swapi.dev/api/'
@@ -71,6 +68,7 @@ export class StarWarsService {
 	}
 
 	selectStarShipById(id: string) {
+		// could fix demo bug by clearing name here first
 		this.#_starShipId.set(id);
 	}
 
