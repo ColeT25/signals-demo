@@ -1,7 +1,16 @@
 import { computed, Injectable, resource, signal } from '@angular/core';
 
 
-export const exampleStarshipNameIdMap: Map<string, string> = new Map([['Death Star', '9'], ['Millennium Falcon', '10']]);
+export const exampleStarshipNameIdMap: Map<string, string> = new Map([
+	['Death Star', '9'],
+	['Millennium Falcon', '10'],
+	['Sentinel-class landing craft', '5'],
+	['Y-wing', '11'],
+	['X-wing', '12'],
+	['TIE Advanced x1', '13'],
+	['Executor', '15'],
+	['Rebel transport', '17']
+]);
 
 export interface StarShip {
 	cost_in_credits: number;

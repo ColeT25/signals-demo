@@ -17,7 +17,7 @@ import { StarShip } from '../../services/star-wars.service';
 				(keydown)="onKeydown($event, $index, ship)"
 				(pointerdown)="$event.preventDefault()"
 				>
-				Name: {{ship.name}}, ID: {{ship.id}}
+				{{ship.name}}
 			</div>
 		}
 	`,
