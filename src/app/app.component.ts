@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, linkedSignal, signal, viewChild } from '@angular/core';
 import { exampleStarshipNameIdMap, StarShip, StarWarsService } from '../services/star-wars.service';
 import { StarshipDisplayComponent } from '../components/starship-display/starship-display.component';
 import { StarshipSelectListComponent } from "../components/starship-select-list/starship-select-list.component";
@@ -25,6 +25,9 @@ export class AppComponent {
 	readonly #_starWarsService = inject(StarWarsService);
 
 	readonly isLoadingStarShip = this.#_starWarsService.isLoading;
+	readonly allowNameEdits = signal<boolean>(false);
+	readonly allShipsMap = exampleStarshipNameIdMap;
+
 	readonly starshipSelected = computed<boolean>(() => {
 		const starWarsService = this.#_starWarsService;
 		return starWarsService.currentStarShip() !== null && !starWarsService.isLoading();
@@ -38,15 +41,14 @@ export class AppComponent {
 		}
 	});
 
-	readonly allowNameEdits = signal<boolean>(false);
-
-	readonly allShipsMap = exampleStarshipNameIdMap;
+	readonly shipSelect = viewChild.required<ElementRef<HTMLSelectElement>>('shipSelect');
 
 	selectStarship(starshipId: string): void {
 		this.#_starWarsService.selectStarShipById(starshipId)
 	}
 
-	testStarshipClear(): void {
+	clearStarship(): void {
+		this.shipSelect().nativeElement.selectedIndex = -1;
 		this.#_starWarsService.clearSelectedStarship();
 	}
 
