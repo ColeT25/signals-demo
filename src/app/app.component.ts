@@ -26,6 +26,7 @@ export class AppComponent implements AfterViewInit {
 
 	readonly isLoadingStarShip = this.#_starWarsService.isLoading;
 	readonly allowNameEdits = signal<boolean>(false);
+	readonly showMeme = signal<boolean>(false);
 	readonly allShipsMap = exampleStarshipNameIdMap;
 
 	readonly starshipIsSelected = computed<boolean>(() => {
@@ -74,6 +75,10 @@ export class AppComponent implements AfterViewInit {
 
 	toggleAllowNameEdits(): void {
 		this.allowNameEdits.update(val => !val);
+	}
+
+	toggleShowMeme(): void {
+		this.showMeme.update(val => !val);
 	}
 
 	onKeydown(event: KeyboardEvent): void {

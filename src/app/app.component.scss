@@ -1,49 +1,67 @@
 div.container {
 	display: flex;
-	flex-direction: column;
-
-	h1.demo-title {
+	flex-direction: row;
+	justify-content: space-between;
+	justify-self: center;
+	div.meme {
 		align-self: center;
-		color:black;
+		width: 50%;
+		padding-left: 25px;
+		font-size: 24px;
 	}
 
-	div.display-container {
+	div.real-content {
 		display: flex;
 		flex-direction: column;
-		width: 50%;
-		align-content: center;
-		justify-content: center;
 
-		label {
-			padding-bottom: 5px;
-			color: black;
-			font-size: 20px;
+		h1.demo-title {
+			align-self: center;
+			color:black;
 		}
 
-		div.controls {
+		div.display-container {
 			display: flex;
-			width: 60%;
-			margin-bottom: 10px;
-			button, select {
-				margin-right: 5px;
+			flex-direction: column;
+			width: 100%;
+			align-content: center;
+			justify-content: center;
+
+			label {
+				padding-bottom: 5px;
+				color: black;
+				font-size: 20px;
+			}
+
+			div.controls {
+				display: flex;
+				width: 60%;
+				margin-bottom: 10px;
+				button, select {
+					margin-right: 5px;
+				}
+			}
+
+			div.loading {
+				width: 60%;
+				color: darkblue;
+				font-size: 30px;
+				font-style: italic;
+				text-align: center;
+			}
+
+			div.no-select {
+				width: 60%;
+				color:darkred;
+				font-size: 30px;
+				font-weight: bold;
+				text-align: center;
+			}
+
+			div.meme {
+				display: flex;
+				flex-direction: column;
+
 			}
 		}
-
-		div.loading {
-			width: 60%;
-			color: darkblue;
-			font-size: 30px;
-			font-style: italic;
-			text-align: center;
-		}
-
-		div.no-select {
-			width: 60%;
-			color:darkred;
-			font-size: 30px;
-			font-weight: bold;
-			text-align: center;
-		}
 	}
-
 }
