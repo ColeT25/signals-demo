@@ -8,7 +8,7 @@ import { StarShip } from '../../services/star-wars.service';
 	template: `
 		@let selected = selectedShips();
 		@for (ship of starShips(); track $index) {
-			<div #ship tabindex="0"
+			<div #ship tabindex="-1"
 				[class.selected]="selected.has(ship)"
 				[class.hovered]="hoveredShip() === ship"
 				(mouseenter)="hoverShip(ship)"

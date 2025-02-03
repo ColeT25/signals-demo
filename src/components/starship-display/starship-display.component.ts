@@ -43,7 +43,7 @@ import { StarShip } from '../../services/star-wars.service';
 			Cost: {{currentStarShip.cost_in_credits}}
 		</div>
 
-		<button tabindex="-1" (click)="likeStarShip.emit()">Like StarShip</button>
+		<button (click)="likeStarShip.emit()">Like StarShip</button>
 
 
 		<span class="tooltip" #tooltip [style.display]="displayTooltip() ? 'block' : 'none'"></span>
