@@ -77,6 +77,10 @@ export class AppComponent implements AfterViewInit {
 		this.allowNameEdits.update(val => !val);
 	}
 
+	removeSelectedShips(): void {
+		this.shipList().removeSelectedShips();
+	}
+
 	toggleShowMeme(): void {
 		this.showMeme.update(val => !val);
 	}
