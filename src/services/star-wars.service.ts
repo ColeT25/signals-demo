@@ -1,5 +1,4 @@
 import { computed, Injectable, linkedSignal, resource, signal } from '@angular/core';
-import { Flavor } from '../utils/utils';
 
 
 export const exampleStarshipNameIdMap: {[starShipName: string]: string} = {'Death Star': '9'};
