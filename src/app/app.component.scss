@@ -14,11 +14,17 @@ div.container {
 		align-content: center;
 		justify-content: center;
 
-		div.buttons {
+		label {
+			padding-bottom: 5px;
+			color: black;
+			font-size: 20px;
+		}
+
+		div.controls {
 			display: flex;
 			width: 60%;
 			margin-bottom: 10px;
-			button {
+			button, select {
 				margin-right: 5px;
 			}
 		}

@@ -2,9 +2,13 @@
 	<h1 class="demo-title">Welcome to the Star Wars Signals Demo!</h1>
 
 	<div class="display-container">
-		<div class="buttons">
-			<button (click)="testStarshipSelect()">Click me to test out the api via name!</button>
-			<button (click)="testStarshipSelectById()">Click me to test out the api via ID!</button>
+		<label for="ships">Select a Star Ship:</label>
+		<div class="controls">
+			<select #shipSelect name="ships" id="ships" (input)="selectStarship(shipSelect.value)">
+				@for (starship of allShipsMap; track $index) {
+					<option [value]="starship[1]" >{{starship[0]}}</option>
+				}
+			</select>
 			<button (click)="testStarshipClear()">Clear selection</button>
 			<button (click)="toggleAllowNameEdits()">Allow name edits</button>
 		</div>
@@ -17,7 +21,7 @@
 		} @else if (isLoadingStarShip()) {
 			<div class="loading">Loading!</div>
 		} @else {
-			<div class="no-select">No StarShip selected!</div>
+			<div class="no-select">No Star Ship selected!</div>
 		}
 	</div>
 

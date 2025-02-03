@@ -1,8 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal, signal } from '@angular/core';
-import { DEMO_STARSHIP, StarShip, StarWarsService } from '../services/star-wars.service';
+import { exampleStarshipNameIdMap, StarShip, StarWarsService } from '../services/star-wars.service';
 import { StarshipDisplayComponent } from '../components/starship-display/starship-display.component';
 import { StarshipSelectListComponent } from "../components/starship-select-list/starship-select-list.component";
 
+const DEMO_STARSHIP: StarShip = {
+	cost_in_credits: 10000,
+	crew: 10,
+	hyperdrive_rating: 5,
+	length: 50,
+	manufacturer: 'Angular',
+	model: 'Angular signals',
+	name: 'demo',
+	id: '0'
+}
 
 @Component({
     selector: 'app-root',
@@ -20,9 +30,6 @@ export class AppComponent {
 		return starWarsService.currentStarShip() !== null && !starWarsService.isLoading();
 	});
 
-	// todo create component with signal inputs to pass starship into
-	// update this to not just have a few buttons but a dropdown with some valid selections and more cool stuff
-	// Also need to show off effects
 	readonly starship = linkedSignal<StarShip>(() => {
 		if (this.starshipSelected()) {
 			return this.#_starWarsService.currentStarShip()!;
@@ -33,13 +40,10 @@ export class AppComponent {
 
 	readonly allowNameEdits = signal<boolean>(false);
 
-	// doesn't work if you go from selecting by ID to selecting by name since the name isn't changing the ID signal doesn't update. Tricky tricky, may be worth demoing
-	testStarshipSelect(): void {
-		this.#_starWarsService.selectStarShipByName('Death Star')
-	}
+	readonly allShipsMap = exampleStarshipNameIdMap;
 
-	testStarshipSelectById(): void {
-		this.#_starWarsService.selectStarShipById('10')
+	selectStarship(starshipId: string): void {
+		this.#_starWarsService.selectStarShipById(starshipId)
 	}
 
 	testStarshipClear(): void {
