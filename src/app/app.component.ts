@@ -26,7 +26,7 @@ export class AppComponent implements AfterViewInit {
 
 	readonly isLoadingStarShip = this.#_starWarsService.isLoading;
 	readonly allowNameEdits = signal<boolean>(false);
-	readonly showMeme = signal<boolean>(false);
+	readonly showMeme = signal<boolean>(true);
 	readonly allShipsMap = exampleStarshipNameIdMap;
 
 	readonly starshipIsSelected = computed<boolean>(() => {
