@@ -14,6 +14,7 @@ import { StarShip } from '../../services/star-wars.service';
 				(mouseenter)="hoverShip(ship)"
 				(mouseleave)="clearHover()"
 				(click)="toggleShipSelection(ship)"
+				(contextmenu)="removeShip($event, ship)"
 				(keydown)="onKeydown($event, $index, ship)"
 				(pointerdown)="$event.preventDefault()"
 				>
@@ -62,6 +63,15 @@ export class StarshipSelectListComponent {
 				}
 			}
 			return newShips;
+		});
+	}
+
+	removeShip(event: MouseEvent, ship: StarShip): void {
+		event.preventDefault();
+		event.stopPropagation();
+		this.starShips.update(prevShips => {
+			prevShips.delete(ship);
+			return new Set(prevShips);
 		});
 	}
 
