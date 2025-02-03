@@ -17,7 +17,9 @@
 			<starship-display
 				[(starShip)]="starship"
 				[allowEdit]="allowNameEdits()"
+				(likeStarShip)="likeCurrentStarShip()"
 			/>
+
 		} @else if (isLoadingStarShip()) {
 			<div class="loading">Loading!</div>
 		} @else {
@@ -28,6 +30,6 @@
 
 
 	<div class="list-container">
-		<!-- <starship-select-list /> -->
+		<starship-select-list />
 	</div>
 </div>

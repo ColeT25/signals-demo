@@ -42,6 +42,7 @@ export class AppComponent {
 	});
 
 	readonly shipSelect = viewChild.required<ElementRef<HTMLSelectElement>>('shipSelect');
+	readonly shipList = viewChild.required(StarshipSelectListComponent);
 
 	constructor() {
 		effect(() => {
@@ -51,6 +52,10 @@ export class AppComponent {
 				starShipSelect.value = currentStarShipId;
 			}
 		})
+	}
+
+	likeCurrentStarShip(): void {
+		this.shipList().addShipToList(this.starship());
 	}
 
 	selectStarship(starshipId: string): void {
