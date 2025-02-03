@@ -18,7 +18,7 @@ type StarShipRequest = {
 	id: string;
 }
 
-const INVALID_ID: string = '-1';
+export const INVALID_ID: string = '-1';
 const baseStarShipRequestUrl = `http://swapi.dev/api/starships/`;
 
 @Injectable({

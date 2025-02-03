@@ -13,7 +13,7 @@
 			<button (click)="toggleAllowNameEdits()">Allow name edits</button>
 		</div>
 
-		@if(starshipSelected()) {
+		@if(starshipIsSelected()) {
 			<starship-display
 				[(starShip)]="starship"
 				[allowEdit]="allowNameEdits()"

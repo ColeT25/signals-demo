@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, linkedSignal, signal, viewChild } from '@angular/core';
-import { exampleStarshipNameIdMap, StarShip, StarWarsService } from '../services/star-wars.service';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, linkedSignal, signal, viewChild } from '@angular/core';
+import { exampleStarshipNameIdMap, INVALID_ID, StarShip, StarWarsService } from '../services/star-wars.service';
 import { StarshipDisplayComponent } from '../components/starship-display/starship-display.component';
 import { StarshipSelectListComponent } from "../components/starship-select-list/starship-select-list.component";
 
@@ -11,7 +11,7 @@ const DEMO_STARSHIP: StarShip = {
 	manufacturer: 'Angular',
 	model: 'Angular signals',
 	name: 'demo',
-	id: '0'
+	id: INVALID_ID
 }
 
 @Component({
@@ -28,13 +28,13 @@ export class AppComponent {
 	readonly allowNameEdits = signal<boolean>(false);
 	readonly allShipsMap = exampleStarshipNameIdMap;
 
-	readonly starshipSelected = computed<boolean>(() => {
+	readonly starshipIsSelected = computed<boolean>(() => {
 		const starWarsService = this.#_starWarsService;
 		return starWarsService.currentStarShip() !== null && !starWarsService.isLoading();
 	});
 
 	readonly starship = linkedSignal<StarShip>(() => {
-		if (this.starshipSelected()) {
+		if (this.starshipIsSelected()) {
 			return this.#_starWarsService.currentStarShip()!;
 		} else {
 			return DEMO_STARSHIP;
@@ -43,12 +43,21 @@ export class AppComponent {
 
 	readonly shipSelect = viewChild.required<ElementRef<HTMLSelectElement>>('shipSelect');
 
+	constructor() {
+		effect(() => {
+			const currentStarShipId = this.starship().id;
+			const starShipSelect = this.shipSelect().nativeElement;
+			if (currentStarShipId !== starShipSelect.value) {
+				starShipSelect.value = currentStarShipId;
+			}
+		})
+	}
+
 	selectStarship(starshipId: string): void {
 		this.#_starWarsService.selectStarShipById(starshipId)
 	}
 
 	clearStarship(): void {
-		this.shipSelect().nativeElement.selectedIndex = -1;
 		this.#_starWarsService.clearSelectedStarship();
 	}
 
