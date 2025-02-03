@@ -1,0 +1,27 @@
+div {
+	font-size: 24px;
+	color: black;
+	text-wrap: none;
+	overflow: none;
+	text-overflow: ellipsis;
+	margin: 5px;
+	border: 2px solid blue;
+	border-radius: 20px;
+	display: inline-block;
+	padding: 8px;
+
+	&.selected {
+		border-color: green;
+		background-color: green;
+	}
+
+	&.hovered {
+		border-color: red;
+		color: darkred;
+	}
+
+	&:focus {
+		border-color: yellow;
+		border-width: 5px;
+	}
+}

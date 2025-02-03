@@ -1,16 +1,16 @@
-<div class="container">
+<div class="container" #container tabindex="-1" (keydown)="onKeydown($event)">
 	<h1 class="demo-title">Welcome to the Star Wars Signals Demo!</h1>
 
 	<div class="display-container">
 		<label for="ships">Select a Star Ship:</label>
 		<div class="controls">
-			<select #shipSelect name="ships" id="ships" (input)="selectStarship(shipSelect.value)">
+			<select #shipSelect tabindex="-1" name="ships" id="ships" (input)="selectStarship(shipSelect.value)">
 				@for (starship of allShipsMap; track $index) {
 					<option [value]="starship[1]" >{{starship[0]}}</option>
 				}
 			</select>
-			<button (click)="clearStarship()">Clear selection</button>
-			<button (click)="toggleAllowNameEdits()">Allow name edits</button>
+			<button tabindex="-1" (click)="clearStarship()">Clear selection</button>
+			<button tabindex="-1" (click)="toggleAllowNameEdits()">Allow name edits</button>
 		</div>
 
 		@if(starshipIsSelected()) {

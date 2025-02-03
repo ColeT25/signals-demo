@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, linkedSignal, signal, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, linkedSignal, signal, viewChild } from '@angular/core';
 import { exampleStarshipNameIdMap, INVALID_ID, StarShip, StarWarsService } from '../services/star-wars.service';
 import { StarshipDisplayComponent } from '../components/starship-display/starship-display.component';
 import { StarshipSelectListComponent } from "../components/starship-select-list/starship-select-list.component";
@@ -21,7 +21,7 @@ const DEMO_STARSHIP: StarShip = {
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
 	readonly #_starWarsService = inject(StarWarsService);
 
 	readonly isLoadingStarShip = this.#_starWarsService.isLoading;
@@ -43,6 +43,7 @@ export class AppComponent {
 
 	readonly shipSelect = viewChild.required<ElementRef<HTMLSelectElement>>('shipSelect');
 	readonly shipList = viewChild.required(StarshipSelectListComponent);
+	readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
 
 	constructor() {
 		effect(() => {
@@ -52,6 +53,11 @@ export class AppComponent {
 				starShipSelect.value = currentStarShipId;
 			}
 		})
+	}
+
+	ngAfterViewInit(): void {
+		this.shipSelect().nativeElement.selectedIndex = -1;
+		this.container().nativeElement.focus();
 	}
 
 	likeCurrentStarShip(): void {
@@ -68,5 +74,13 @@ export class AppComponent {
 
 	toggleAllowNameEdits(): void {
 		this.allowNameEdits.update(val => !val);
+	}
+
+	onKeydown(event: KeyboardEvent): void {
+		if (event.key === 'Tab') {
+			event.preventDefault();
+			event.stopPropagation();
+			this.shipList().focusFirstShip();
+		}
 	}
 }

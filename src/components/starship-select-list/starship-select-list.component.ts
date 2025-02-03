@@ -1,21 +1,25 @@
-import { Component, ElementRef, linkedSignal, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, linkedSignal, signal, viewChildren } from '@angular/core';
 import { StarShip } from '../../services/star-wars.service';
 
 
 @Component({
 	selector: 'starship-select-list',
-	imports: [],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	template: `
-		<div (keydown)="onKeydown($event)">
-			@let selected = selectedShips();
-			@for (ship of starShips(); track $index) {
-				<div #ship tabindex="-1" [class.selected]="selected.has(ship)" [class.hovered]="hoveredShip() === ship"
-					(mouseenter)="hoverShip(ship)" (mouseleave)="clearHover()" (click)="selectShip(ship)"
-					>
-					Name: {{ship.name}}, ID: {{ship.id}}
-				</div>
-			}
-		</div>
+		@let selected = selectedShips();
+		@for (ship of starShips(); track $index) {
+			<div #ship tabindex="0"
+				[class.selected]="selected.has(ship)"
+				[class.hovered]="hoveredShip() === ship"
+				(mouseenter)="hoverShip(ship)"
+				(mouseleave)="clearHover()"
+				(click)="toggleShipSelection(ship)"
+				(keydown)="onKeydown($event, $index, ship)"
+				(pointerdown)="$event.preventDefault()"
+				>
+				Name: {{ship.name}}, ID: {{ship.id}}
+			</div>
+		}
 	`,
 	styleUrl: './starship-select-list.component.scss'
 })
@@ -67,26 +71,40 @@ export class StarshipSelectListComponent {
 		this.hoveredShip.set(null);
 	}
 
-	selectShip(ship: StarShip): void {
-		this.selectedShips.update(prev => new Set([...prev, ship]));
-	}
-
-	onKeydown(event: KeyboardEvent): void {
-		if (event.key === 'Tab') {
-			let currentlyFocusedDivIndex: number | null = null;
-			let shipDivs = this.shipDivs();
-			for (let i = 0; i < shipDivs.length; i++) {
-				if (shipDivs[i].nativeElement === document.activeElement) {
-					currentlyFocusedDivIndex = i;
-					break;
-				}
+	toggleShipSelection(ship: StarShip): void {
+		this.selectedShips.update(prev => {
+			if (prev.has(ship)) {
+				prev.delete(ship);
+			} else {
+				prev.add(ship);
 			}
 
-			if (currentlyFocusedDivIndex !== null && currentlyFocusedDivIndex !== shipDivs.length - 1) {
-				shipDivs[currentlyFocusedDivIndex + 1].nativeElement.focus();
+			return new Set(prev);
+		});
+	}
+
+	onKeydown(event: KeyboardEvent, currentShipIndex: number, currentShip: StarShip): void {
+		if (event.key === 'Tab') {
+			event.stopPropagation();
+			event.preventDefault();
+			const shipDivs = this.shipDivs();
+
+			if (currentShipIndex !== shipDivs.length - 1) {
+				shipDivs[currentShipIndex + 1].nativeElement.focus();
 			} else {
 				shipDivs[0].nativeElement.focus();
 			}
+		} else if (event.key === 'Enter' || event.key === ' ') {
+			event.stopPropagation();
+			event.preventDefault();
+			this.toggleShipSelection(currentShip);
+		}
+	}
+
+	focusFirstShip(): void {
+		const shipDivs = this.shipDivs();
+		if (shipDivs.length > 0) {
+			this.shipDivs()[0].nativeElement.focus();
 		}
 	}
 

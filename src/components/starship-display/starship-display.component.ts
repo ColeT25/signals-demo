@@ -43,8 +43,7 @@ import { StarShip } from '../../services/star-wars.service';
 			Cost: {{currentStarShip.cost_in_credits}}
 		</div>
 
-		<button (click)="likeStarShip.emit()">Like StarShip</button>
-		<button (click)="buyStarShip.emit(currentStarShip.cost_in_credits)">Buy StarShip</button>
+		<button tabindex="-1" (click)="likeStarShip.emit()">Like StarShip</button>
 
 
 		<span class="tooltip" #tooltip [style.display]="displayTooltip() ? 'block' : 'none'"></span>
@@ -55,7 +54,6 @@ export class StarshipDisplayComponent {
 	readonly starShip = model.required<StarShip>();
 	readonly allowEdit = input<boolean>(false);
 
-	readonly buyStarShip = output<number>();
 	readonly likeStarShip = output<void>();
 
 	readonly displayTooltip = signal<boolean>(false);
