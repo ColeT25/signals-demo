@@ -1,15 +1,27 @@
-<div>
+<div class="container">
 	<h1 class="demo-title">Welcome to the Star Wars Signals Demo!</h1>
 
-	<button (click)="testStarshipSelect()">Click me to test out the api via name!</button>
-	<button (click)="testStarshipSelectById()">Click me to test out the api via ID!</button>
-	<button (click)="testStarshipClear()">Clear selection</button>
+	<div class="display-container">
+		<div class="buttons">
+			<button (click)="testStarshipSelect()">Click me to test out the api via name!</button>
+			<button (click)="testStarshipSelectById()">Click me to test out the api via ID!</button>
+			<button (click)="testStarshipClear()">Clear selection</button>
+		</div>
 
-	@if(starshipSelected()) {
-		<div>{{ starship().name }}</div>
-	} @else if (starWarsService.isLoading()) {
-		<div>Loading!</div>
-	} @else {
-		<div>Nothing selected!</div>
-	}
+		@if(starshipSelected()) {
+			<starship-display
+				[(starShip)]="starship"
+			/>
+		} @else if (isLoadingStarShip()) {
+			<div class="loading">Loading!</div>
+		} @else {
+			<div class="no-select">No StarShip selected!</div>
+		}
+	</div>
+
+
+
+	<div class="list-container">
+		<!-- <starship-select-list /> -->
+	</div>
 </div>

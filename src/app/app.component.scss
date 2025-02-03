@@ -1,0 +1,40 @@
+div.container {
+	display: flex;
+	flex-direction: column;
+
+	h1.demo-title {
+		align-self: center;
+		color:black;
+	}
+
+	div.display-container {
+		display: flex;
+		flex-direction: column;
+		width: 30%;
+		align-content: center;
+		justify-content: center;
+
+		div.buttons {
+			display: flex;
+			margin-bottom: 10px;
+			button {
+				margin-right: 5px;
+			}
+		}
+
+		div.loading {
+			color: darkblue;
+			font-size: 30px;
+			font-style: italic;
+			text-align: center;
+		}
+
+		div.no-select {
+			color:darkred;
+			font-size: 30px;
+			font-weight: bold;
+			text-align: center;
+		}
+	}
+
+}
