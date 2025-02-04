@@ -29,14 +29,39 @@ export class AppComponent implements AfterViewInit {
 	readonly showMeme = signal<boolean>(true);
 	readonly allShipsMap = exampleStarshipNameIdMap;
 
-	readonly starshipIsSelected = computed<boolean>(() => {
-		const starWarsService = this.#_starWarsService;
-		return starWarsService.currentStarShip() !== null && !starWarsService.isLoading();
+	readonly likedShips = signal<Set<StarShip>>(new Set());
+	readonly selectedLikedShips = linkedSignal<Set<StarShip>, Set<StarShip>>({
+		source: this.likedShips,
+		computation: (newShips, previousSelected) => {
+			const selections = new Set<StarShip>();
+			const prevSelections = previousSelected?.value;
+
+			if (prevSelections) {
+				for (const prevSelection of prevSelections) {
+					if (newShips.has(prevSelection)) {
+						selections.add(prevSelection);
+					}
+				}
+			}
+
+			return selections;
+		}
 	});
 
-	readonly starship = linkedSignal<StarShip>(() => {
-		if (this.starshipIsSelected()) {
-			return this.#_starWarsService.currentStarShip()!;
+	readonly starshipIsSelectedToDisplay = computed<boolean>(() => {
+		const starWarsService = this.#_starWarsService;
+		const currentStarShip = this.currentStarShip();
+		if (currentStarShip === starWarsService.currentStarShip()) {
+			return !starWarsService.isLoading();
+		}
+
+		return currentStarShip !== DEMO_STARSHIP;
+	});
+
+	readonly currentStarShip = linkedSignal<StarShip>(() => {
+		const currentShip = this.#_starWarsService.currentStarShip();
+		if (currentShip !== null) {
+			return currentShip;
 		} else {
 			return DEMO_STARSHIP;
 		}
@@ -48,7 +73,7 @@ export class AppComponent implements AfterViewInit {
 
 	constructor() {
 		effect(() => {
-			const currentStarShipId = this.starship().id;
+			const currentStarShipId = this.currentStarShip().id;
 			const starShipSelect = this.shipSelect().nativeElement;
 			if (currentStarShipId !== starShipSelect.value) {
 				starShipSelect.value = currentStarShipId;
@@ -62,11 +87,27 @@ export class AppComponent implements AfterViewInit {
 	}
 
 	likeCurrentStarShip(): void {
-		this.shipList().addShipToList(this.starship());
+		this.likedShips.update(prev => new Set([...prev, this.currentStarShip()]));
 	}
 
-	selectStarship(starshipId: string): void {
+	selectStarshipFromDropdown(starshipId: string): void {
 		this.#_starWarsService.selectStarShipById(starshipId)
+	}
+
+	toggleLikedStarshipSelection(starship: StarShip): void {
+		let shouldDisplayShip = false;
+		this.selectedLikedShips.update(currentLiked => {
+			if (currentLiked.has(starship)) {
+				currentLiked.delete(starship);
+			} else {
+				currentLiked.add(starship);
+				shouldDisplayShip = true;
+			}
+
+			return new Set(currentLiked);
+		});
+
+		if (shouldDisplayShip) this.currentStarShip.set(starship);
 	}
 
 	clearStarship(): void {
@@ -77,8 +118,21 @@ export class AppComponent implements AfterViewInit {
 		this.allowNameEdits.update(val => !val);
 	}
 
-	removeSelectedShips(): void {
-		this.shipList().removeSelectedShips();
+	removeSelectedLikedShips(): void {
+		this.likedShips.update(likedShips => {
+			const currentSelected = this.selectedLikedShips();
+			for (const selectedShip of currentSelected) {
+				likedShips.delete(selectedShip);
+			}
+			return new Set(likedShips);
+		})
+	}
+
+	removeLikedShip(starShip: StarShip): void {
+		this.likedShips.update(currentLiked => {
+			currentLiked.delete(starShip);
+			return new Set(currentLiked);
+		})
 	}
 
 	toggleShowMeme(): void {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, linkedSignal, output, signal, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, input, output, signal, viewChildren } from '@angular/core';
 import { StarShip } from '../../services/star-wars.service';
 
 
@@ -25,54 +25,19 @@ import { StarShip } from '../../services/star-wars.service';
 	styleUrl: './starship-select-list.component.scss'
 })
 export class StarshipSelectListComponent {
-	readonly starShips = signal<Set<StarShip>>(new Set());
+	readonly starShips = input.required<Set<StarShip>>();
+	readonly selectedShips = input.required<Set<StarShip>>();
 	readonly hoveredShip = signal<StarShip | null>(null);
-	readonly selectedShips = linkedSignal<Set<StarShip>, Set<StarShip>>({
-		source: this.starShips,
-		computation: (newShips, previousSelected) => {
-			const selections = new Set<StarShip>();
-			const prevSelections = previousSelected?.value;
 
-			if (prevSelections) {
-				for (const prevSelection of prevSelections) {
-					if (newShips.has(prevSelection)) {
-						selections.add(prevSelection);
-					}
-				}
-			}
-
-			return selections;
-		}
-	});
-
-	readonly selectShip = output<string>(); // outputs the ID of the most recent ship selected
+	readonly toggleStarShipSelection = output<StarShip>();
+	readonly removeStarShip = output<StarShip>();
 
 	readonly shipDivs = viewChildren<ElementRef<HTMLElement>>('ship');
-
-	addShipToList(newShip: StarShip): void {
-		this.starShips.update((prev) => (new Set([...prev, newShip])));
-	}
-
-	removeSelectedShips(): void {
-		const selectedShips = this.selectedShips();
-		this.starShips.update(prev => {
-			const newShips = new Set<StarShip>();
-			for (const ship of prev) {
-				if (!selectedShips.has(ship)) {
-					newShips.add(ship);
-				}
-			}
-			return newShips;
-		});
-	}
 
 	removeShip(event: MouseEvent, ship: StarShip): void {
 		event.preventDefault();
 		event.stopPropagation();
-		this.starShips.update(prevShips => {
-			prevShips.delete(ship);
-			return new Set(prevShips);
-		});
+		this.removeStarShip.emit(ship);
 	}
 
 	hoverShip(ship: StarShip): void {
@@ -84,16 +49,7 @@ export class StarshipSelectListComponent {
 	}
 
 	toggleShipSelection(ship: StarShip): void {
-		this.selectedShips.update(prev => {
-			if (prev.has(ship)) {
-				prev.delete(ship);
-			} else {
-				prev.add(ship);
-				this.selectShip.emit(ship.id);
-			}
-
-			return new Set(prev);
-		});
+		this.toggleStarShipSelection.emit(ship);
 	}
 
 	onKeydown(event: KeyboardEvent, currentShipIndex: number, currentShip: StarShip): void {
