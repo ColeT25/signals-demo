@@ -1,6 +1,6 @@
 # SignalsDemo
 
-## This project is meant to be a demonstration of different types of signals and how they can be used to increase reactivity in an angular application. This app also does not use Zone.js, which is pretty cool. 
+This project is meant to be a demonstration of different types of signals and how they can be used to increase reactivity in an angular application. This app also does not use Zone.js, which is pretty cool. 
 
 ## Development server
 
