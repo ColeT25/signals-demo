@@ -1,53 +1,60 @@
-<div class="container" #container tabindex="-1" (keydown)="onKeydown($event)">
+@if(showGoodExample()) {
+	<button (click)="hideGoodExample()" style="margin-right: 15px;">Show bad example</button>
+	<good-example />
+} @else if (showBadExample()) {
+	<button (click)="hideBadExample()" style="margin-right: 15px;">Show full demo</button>
+	<bad-example />
+} @else {
+	<div class="container" #container tabindex="-1" (keydown)="onKeydown($event)">
 
-	<div class="real-content">
-		<h1 class="demo-title">Welcome to the Star Wars Signals Demo!</h1>
+		<div class="real-content">
+			<h1 class="demo-title">Welcome to the Star Wars Signals Demo!</h1>
 
-		<div class="display-container">
-			<label for="ships">Select a Star Ship:</label>
-			<div class="controls">
-				<select #shipSelect name="ships" id="ships" (input)="selectStarshipFromDropdown(shipSelect.value)">
-					@for (starship of allShipsMap; track $index) {
-						<option [value]="starship[1]" >{{starship[0]}}</option>
-					}
-				</select>
-				<button (click)="clearStarship()">Clear dropdown selection</button>
-				<button (click)="toggleAllowNameEdits()">Allow name edits</button>
-				<button (click)="removeSelectedLikedShips()">Remove selected liked ships</button>
-				<button (click)="toggleShowMeme()">Show/hide meme</button>
+			<div class="display-container">
+				<label for="ships">Select a Star Ship:</label>
+				<div class="controls">
+					<select #shipSelect name="ships" id="ships" (input)="selectStarshipFromDropdown(shipSelect.value)">
+						@for (starship of allShipsMap; track $index) {
+							<option [value]="starship[1]" >{{starship[0]}}</option>
+						}
+					</select>
+					<button (click)="clearStarship()">Clear dropdown selection</button>
+					<button (click)="toggleAllowNameEdits()">Allow name edits</button>
+					<button (click)="removeSelectedLikedShips()">Remove selected liked ships</button>
+					<button (click)="toggleShowMeme()">Show/hide meme</button>
+				</div>
+
+				@if(starshipIsSelectedToDisplay()) {
+					<starship-display
+						[(starShip)]="currentStarShip"
+						[allowEdit]="allowNameEdits()"
+						(likeStarShip)="likeCurrentStarShip()"
+					/>
+
+				} @else if (isLoadingStarShip()) {
+					<div class="loading">Loading!</div>
+				} @else {
+					<div class="no-select">No Star Ship selected!</div>
+				}
 			</div>
 
-			@if(starshipIsSelectedToDisplay()) {
-				<starship-display
-					[(starShip)]="currentStarShip"
-					[allowEdit]="allowNameEdits()"
-					(likeStarShip)="likeCurrentStarShip()"
+
+
+			<div class="list-container">
+				<starship-select-list
+					[starShips]="likedShips()"
+					[selectedShips]="selectedLikedShips()"
+					(toggleStarShipSelection)="toggleLikedStarshipSelection($event)"
+					(removeStarShip)="removeLikedShip($event)"
 				/>
-
-			} @else if (isLoadingStarShip()) {
-				<div class="loading">Loading!</div>
-			} @else {
-				<div class="no-select">No Star Ship selected!</div>
-			}
+			</div>
 		</div>
 
-
-
-		<div class="list-container">
-			<starship-select-list
-				[starShips]="likedShips()"
-				[selectedShips]="selectedLikedShips()"
-				(toggleStarShipSelection)="toggleLikedStarshipSelection($event)"
-				(removeStarShip)="removeLikedShip($event)"
-			/>
-		</div>
+		@if (showMeme()) {
+			<div class="meme">
+				<span>How it feels when you understand signals:</span>
+				<img src="https://allmemetemplates.wordpress.com/wp-content/uploads/2020/02/unlimited-power.jpg">
+			</div>
+		}
 	</div>
-
-	@if (showMeme()) {
-		<div class="meme">
-			<span>How it feels when you understand signals:</span>
-			<img src="https://allmemetemplates.wordpress.com/wp-content/uploads/2020/02/unlimited-power.jpg">
-		</div>
-	}
-</div>
-
+}

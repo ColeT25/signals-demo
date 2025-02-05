@@ -2,6 +2,8 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, computed, effect, El
 import { exampleStarshipNameIdMap, INVALID_ID, StarShip, StarWarsService } from '../services/star-wars.service';
 import { StarshipDisplayComponent } from '../components/starship-display/starship-display.component';
 import { StarshipSelectListComponent } from "../components/starship-select-list/starship-select-list.component";
+import { SignalGoodExample } from '../simpleExample/goodExample';
+import { SignalBadExample } from '../simpleExample/badExample';
 
 const DEMO_STARSHIP: StarShip = {
 	cost_in_credits: 10000,
@@ -17,11 +19,11 @@ const DEMO_STARSHIP: StarShip = {
 @Component({
     selector: 'app-root',
 	changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [StarshipDisplayComponent, StarshipSelectListComponent],
+    imports: [StarshipDisplayComponent, StarshipSelectListComponent, SignalGoodExample, SignalBadExample],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
 	readonly #_starWarsService = inject(StarWarsService);
 
 	readonly isLoadingStarShip = this.#_starWarsService.isLoading;
@@ -67,23 +69,18 @@ export class AppComponent implements AfterViewInit {
 		}
 	});
 
-	readonly shipSelect = viewChild.required<ElementRef<HTMLSelectElement>>('shipSelect');
-	readonly shipList = viewChild.required(StarshipSelectListComponent);
-	readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
+	readonly shipSelect = viewChild<ElementRef<HTMLSelectElement>>('shipSelect');
+	readonly shipList = viewChild(StarshipSelectListComponent);
+	readonly container = viewChild<ElementRef<HTMLElement>>('container');
 
 	constructor() {
 		effect(() => {
 			const currentStarShipId = this.currentStarShip().id;
-			const starShipSelect = this.shipSelect().nativeElement;
-			if (currentStarShipId !== starShipSelect.value) {
+			const starShipSelect = this.shipSelect()?.nativeElement;
+			if (starShipSelect && currentStarShipId !== starShipSelect.value) {
 				starShipSelect.value = currentStarShipId;
 			}
 		})
-	}
-
-	ngAfterViewInit(): void {
-		this.shipSelect().nativeElement.selectedIndex = -1;
-		this.container().nativeElement.focus();
 	}
 
 	likeCurrentStarShip(): void {
@@ -143,7 +140,21 @@ export class AppComponent implements AfterViewInit {
 		if (event.key === 'Tab') {
 			event.preventDefault();
 			event.stopPropagation();
-			this.shipList().focusFirstShip();
+			this.shipList()!.focusFirstShip();
 		}
 	}
+
+	// stuff for simple examples
+	readonly showGoodExample = signal<boolean>(true);
+	readonly showBadExample = signal<boolean>(false);
+
+	hideGoodExample(): void {
+		this.showGoodExample.set(false);
+		this.showBadExample.set(true);
+	}
+
+	hideBadExample(): void {
+		this.showBadExample.set(false);
+	}
+	//-----------------------------------------------
 }
