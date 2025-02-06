@@ -31,11 +31,11 @@ export class SignalBadExample {
 		console.log(fullName);
 		setTimeout(() => {
 			this.nameSaved = true;
-			this.#_cdr.markForCheck();
+			//this.#_cdr.markForCheck();
 		}, 1000);
 		setTimeout(() => {
 			this.nameSaved = false;
-			this.#_cdr.markForCheck();
+			//this.#_cdr.markForCheck();
 		}, 3000);
 		return fullName;
 	}
